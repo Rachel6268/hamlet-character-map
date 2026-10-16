@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>《哈姆雷特》主要人物关系图</title>
+<style>
+:root{
+  --ink:#1a1614;--ink-soft:#443c37;--muted:#7d726a;
+  --line:#e4ddd4;--paper:#faf7f2;--card:#fff;
+  --blood:#8c2f39;--blood-soft:#f7eaec;
+  --gold:#a8802a;--gold-soft:#faf3e1;
+  --green:#3f6b52;--green-soft:#eef4f0;
+  --blue:#3f5f80;--blue-soft:#eef2f7;
+  --crown:#6b4a8c;--crown-soft:#f2edf8;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+  background:var(--paper);color:var(--ink);line-height:1.8;font-size:16px;
+  -webkit-font-smoothing:antialiased;
+}
+.serif{font-family:Georgia,"Times New Roman",serif;}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px;}
+
+/* 封面 */
+.hero{
+  padding:64px 0 48px;text-align:center;border-bottom:1px solid var(--line);
+  background:linear-gradient(180deg,#fff 0%,var(--paper) 100%);
+}
+.hero .kicker{
+  display:inline-block;font-size:13px;letter-spacing:.16em;color:var(--gold);
+  border:1px solid var(--gold);padding:4px 16px;border-radius:20px;margin-bottom:22px;
+}
+.hero h1{font-size:40px;line-height:1.3;font-weight:600;margin-bottom:12px;letter-spacing:-.01em;}
+.hero .sub{font-size:17px;color:var(--muted);}
+.hero .sub.serif{font-size:18px;}
+.hero .hint{
+  margin-top:26px;font-size:14px;color:var(--muted);
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--gold-soft);border:1px dashed var(--gold);
+  padding:9px 18px;border-radius:24px;
+}
+.hero .hint::before{content:"✥";color:var(--gold);}
+
+section{padding:46px 0;}
+h2.sec{
+  font-size:14px;letter-spacing:.12em;color:var(--blood);
+  text-transform:uppercase;font-weight:600;margin-bottom:12px;
+}
+h3.sec-title{font-size:26px;font-weight:600;margin-bottom:22px;line-height:1.4;}
+p{margin-bottom:15px;color:var(--ink-soft);}
+
+/* ===== 图例 ===== */
+.legend{display:flex;flex-wrap:wrap;gap:16px;margin:22px 0 8px;font-size:14px;}
+.legend span{display:inline-flex;align-items:center;gap:8px;color:var(--ink-soft);}
+.legend i{
+  display:inline-block;width:26px;height:0;border-top-style:solid;
+  border-top-width:2.5px;border-radius:2px;
+}
+.legend i.b{margin-top:-12px;position:relative;}
+.legend .dot{width:12px;height:12px;border-radius:50%;border:none;}
+
+/* ===== 思维导图主容器 ===== */
+.mapbox{
+  position:relative;margin:34px 0;
+  background:var(--card);border:1px solid var(--line);
+  border-radius:20px;padding:0;overflow:hidden;
+  box-shadow:0 4px 26px rgba(26,22,20,.05);
+}
+.maphead{
+  display:flex;flex-wrap:wrap;align-items:center;gap:12px;
+  padding:18px 26px;border-bottom:1px solid var(--line);
+  background:#fdfcfa;
+}
+.maphead .tt{font-size:15px;font-weight:600;color:var(--ink);}
+.maphead .nodes-note{font-size:13px;color:var(--muted);margin-left:auto;}
+.tbtn{
+  border:1px solid var(--line);background:#fff;color:var(--ink-soft);
+  font-size:13.5px;padding:7px 15px;border-radius:20px;cursor:pointer;
+  transition:all .18s;font-family:inherit;
+}
+.tbtn:hover{border-color:var(--blood);color:var(--blood);background:var(--blood-soft);}
+.tbtn.on{background:var(--blood);border-color:var(--blood);color:#fff;}
+
+.svgwrap{padding:8px 0;overflow-x:auto;background:
+  radial-gradient(circle at 50% 45%,#fff 0%,#fdfbf8 70%);}
+svg{display:block;min-width:900px;width:100%;height:auto;}
+
+/* SVG 节点通用 */
+.node{cursor:pointer;transition:opacity .25s;}
+.node rect{
+  fill:#fff;stroke-width:2;transition:all .25s;
+  filter:drop-shadow(0 2px 6px rgba(26,22,20,.06));
+}
+.node:hover rect{filter:drop-shadow(0 6px 16px rgba(26,22,20,.16));}
+.node .nm{font-size:15px;font-weight:600;fill:var(--ink);
+  font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;}
+.node .en{font-size:11.5px;fill:var(--muted);font-family:Georgia,serif;}
+.node .role{font-size:11px;fill:var(--muted);letter-spacing:.04em;}
+.node.dim{opacity:.22;}
+
+/* 各色系 */
+.n-blood rect{stroke:var(--blood);}
+.n-blood .nm{fill:var(--blood);}
+.n-gold rect{stroke:var(--gold);}
+.n-gold .nm{fill:var(--gold);}
+.n-green rect{stroke:var(--green);}
+.n-green .nm{fill:var(--green);}
+.n-blue rect{stroke:var(--blue);}
+.n-blue .nm{fill:var(--blue);}
+.n-crown rect{stroke:var(--crown);}
+.n-crown .nm{fill:var(--crown);}
+
+/* 选中态 */
+.node.active rect{stroke-width:3.5;fill:#fffef9;}
+.node.active{filter:drop-shadow(0 8px 22px rgba(140,47,57,.28));}
+
+/* 连线 */
+.edge{fill:none;stroke-width:2;transition:opacity .25s,stroke-width .25s;}
+.edge.dim{opacity:.1;}
+.edge.hi{stroke-width:3.5;}
+.e-marry{stroke:var(--blood);}
+.e-sib{stroke:var(--blue);}
+.e-parent{stroke:var(--green);}
+.e-love{stroke:var(--gold);stroke-dasharray:6 5;}
+.e-confl{stroke:var(--blood);stroke-dasharray:2 5;stroke-width:2.5;}
+.edge.double{stroke-dasharray:none;}
+.edge.dashed-love{stroke-dasharray:6 5;}
+
+.edgelabel{
+  font-size:11px;font-family:-apple-system,"PingFang SC",sans-serif;
+  transition:opacity .25s;
+}
+.edgelabel.dim{opacity:.08;}
+.el-marry{fill:var(--blood);}
+.el-sib{fill:var(--blue);}
+.el-parent{fill:var(--green);}
+.el-love{fill:var(--gold);}
+.el-confl{fill:var(--blood);font-weight:600;}
+
+/* 关系标签底板 */
+.elbg{fill:#fdfcfa;}
+
+/* 死亡标记 */
+.death{font-size:11px;fill:var(--muted);}
+
+/* ===== 关系详解卡 ===== */
+details.rel{
+  background:var(--card);border:1px solid var(--line);border-radius:14px;
+  margin-bottom:11px;overflow:hidden;
+}
+details.rel summary{
+  cursor:pointer;padding:16px 22px;list-style:none;
+  display:flex;align-items:baseline;gap:13px;transition:background .18s;
+}
+details.rel summary::-webkit-details-marker{display:none;}
+details.rel summary:hover{background:#fdfbf8;}
+details.rel summary .tag{
+  font-size:12px;color:#fff;padding:3px 10px;border-radius:11px;
+  font-weight:600;white-space:nowrap;
+}
+.t-marry{background:var(--blood);}
+.t-sib{background:var(--blue);}
+.t-parent{background:var(--green);}
+.t-love{background:var(--gold);}
+.t-confl{background:#5c4040;}
+details.rel summary .st{font-size:16px;font-weight:600;flex:1;}
+details.rel summary .st .en{font-size:13px;color:var(--muted);font-weight:400;font-family:Georgia,serif;}
+details.rel summary .arw{color:var(--muted);font-size:13px;transition:transform .2s;}
+details.rel[open] summary .arw{transform:rotate(90deg);}
+details.rel .rbody{
+  padding:0 22px 20px 22px;border-top:1px solid var(--line);
+  padding-top:15px;font-size:15px;color:var(--ink-soft);
+}
+details.rel .rbody b{color:var(--blood);}
+details.rel .rbody .quote{
+  display:block;margin-top:11px;padding:11px 15px;
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  border-radius:0 8px 8px 0;font-size:14px;color:var(--ink-soft);
+}
+details.rel .rbody .quote .w{font-family:Georgia,serif;font-style:italic;}
+
+/* 表格 */
+.tbl-wrap{
+  overflow-x:auto;margin:24px 0;border:1px solid var(--line);
+  border-radius:14px;background:var(--card);
+  box-shadow:0 2px 14px rgba(26,22,20,.04);
+}
+table{width:100%;border-collapse:collapse;font-size:14.5px;min-width:600px;}
+th{
+  background:var(--blood-soft);color:var(--blood);font-weight:600;
+  text-align:left;padding:14px 18px;font-size:13.5px;letter-spacing:.03em;
+}
+td{padding:13px 18px;border-top:1px solid var(--line);color:var(--ink-soft);vertical-align:top;}
+tbody tr:hover{background:#fdfbf8;}
+td:first-child{font-weight:600;color:var(--ink);white-space:nowrap;}
+td .en{font-family:Georgia,serif;color:var(--muted);font-size:13px;}
+
+/* 结局小结 */
+.deaths{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin:24px 0;}
+.dcard{
+  background:var(--card);border:1px solid var(--line);border-left:4px solid var(--blood);
+  border-radius:10px;padding:16px 18px;
+}
+.dcard .nm{font-size:15.5px;font-weight:600;margin-bottom:5px;}
+.dcard .en{font-size:12px;color:var(--muted);font-family:Georgia,serif;margin-bottom:8px;}
+.dcard .de{font-size:13.5px;color:var(--ink-soft);line-height:1.65;}
+.dcard.survive{border-left-color:var(--green);}
+
+footer{
+  padding:40px 0;text-align:center;color:var(--muted);font-size:14px;
+  border-top:1px solid var(--line);
+}
+
+/* ===== 经典台词区 ===== */
+.qfilter{
+  display:flex;flex-wrap:wrap;gap:9px;margin:8px 0 26px;
+}
+.qfilter button{
+  border:1px solid var(--line);background:#fff;color:var(--ink-soft);
+  font-size:13.5px;padding:7px 16px;border-radius:20px;cursor:pointer;
+  transition:all .18s;font-family:inherit;
+}
+.qfilter button:hover{border-color:var(--gold);color:var(--gold);}
+.qfilter button.on{background:var(--gold);border-color:var(--gold);color:#fff;}
+
+.speaker{
+  margin:38px 0 18px;display:flex;align-items:center;gap:14px;
+}
+.speaker .sp-ic{
+  width:38px;height:38px;border-radius:50%;flex:none;
+  display:flex;align-items:center;justify-content:center;
+  font-family:Georgia,serif;font-size:17px;font-weight:600;color:#fff;
+}
+.speaker .sp-name{font-size:19px;font-weight:600;}
+.speaker .sp-name .en{font-size:13.5px;color:var(--muted);
+  font-family:Georgia,serif;font-weight:400;margin-left:6px;}
+.speaker .sp-line{flex:1;height:1px;background:var(--line);}
+
+.qcard{
+  background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:22px 26px;margin-bottom:14px;
+  border-left:4px solid var(--gold);
+  box-shadow:0 2px 14px rgba(26,22,20,.03);
+  transition:box-shadow .2s;
+}
+.qcard:hover{box-shadow:0 6px 22px rgba(26,22,20,.07);}
+.qcard .qen{
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:19px;line-height:1.62;color:var(--ink);
+  margin-bottom:12px;
+}
+.qcard .qen i{color:var(--gold);font-style:normal;}
+.qcard .qzh{
+  font-size:16px;color:var(--blood);font-weight:600;
+  margin-bottom:12px;letter-spacing:.01em;
+}
+.qcard .qmeta{
+  display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;
+}
+.qcard .chip{
+  font-size:12px;padding:3px 11px;border-radius:11px;
+  background:var(--gold-soft);color:var(--gold);font-weight:600;
+}
+.qcard .chip.blue{background:var(--blue-soft);color:var(--blue);}
+.qcard .qnote{
+  font-size:14.5px;color:var(--ink-soft);line-height:1.78;
+  padding-top:12px;border-top:1px dashed var(--line);
+}
+.qcard .qnote b{color:var(--blood);}
+
+.qcard.hide{display:none;}
+
+/* 小提示条 */
+.qhint{
+  background:var(--blue-soft);border-left:3px solid #6b8cae;
+  border-radius:0 10px 10px 0;padding:15px 19px;margin:4px 0 30px;
+  font-size:14.5px;color:var(--ink-soft);
+}
+.qhint strong{color:#3f5f80;}
+@media(max-width:640px){
+  .hero h1{font-size:30px;}
+  .hero{padding:44px 0 34px;}
+}
+@media print{
+  .maphead .tbtn,.hero .hint{display:none;}
+  .mapbox{box-shadow:none;page-break-inside:avoid;}
+  details.rel .rbody{display:block!important;}
+  .node.dim,.edge.dim,.edgelabel.dim{opacity:1!important;}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="kicker">CHARACTER MAP</span>
+    <h1>《哈姆雷特》主要人物关系图</h1>
+    <p class="sub serif">Hamlet · Prince of Denmark</p>
+    <p class="sub" style="margin-top:6px;">七位核心人物的血缘、婚姻与复仇关系</p>
+    <div class="hint">点击图中人物，查看与其他人物的全部关系</div>
+  </div>
+</header>
+
+<!-- ========== 思维导图 ========== -->
+<section>
+  <div class="wrap">
+    <h2 class="sec">Mind Map</h2>
+    <h3 class="sec-title">一张图看懂七个人的关系</h3>
+
+    <div class="legend">
+      <span><i class="b" style="border-top-color:#8c2f39;"></i> 婚姻 / 血缘（王室）</span>
+      <span><i style="border-top-color:#3f6b52;"></i> 亲子</span>
+      <span><i style="border-top-color:#3f5f80;"></i> 兄弟 / 兄妹</span>
+      <span><i style="border-top-color:#a8802a;border-top-style:dashed;"></i> 恋人</span>
+      <span><i style="border-top-color:#8c2f39;border-top-style:dotted;"></i> 敌对（杀害 / 复仇）</span>
+    </div>
+
+    <div class="mapbox">
+      <div class="maphead">
+        <span class="tt">主要人物关系图</span>
+        <button class="tbtn" id="resetBtn">显示全部</button>
+        <span class="nodes-note">点击人物高亮其关系</span>
+      </div>
+      <div class="svgwrap">
+        <svg viewBox="0 0 1000 620" xmlns="http://www.w3.org/2000/svg" id="hamletMap">
+          <defs>
+            <marker id="arrowRed" markerWidth="9" markerHeight="9" refX="7" refY="3"
+                    orient="auto" markerUnits="strokeWidth">
+              <path d="M0,0 L7,3 L0,6 z" fill="#8c2f39"/>
+            </marker>
+            <marker id="arrowDag" markerWidth="9" markerHeight="9" refX="7" refY="3"
+                    orient="auto" markerUnits="strokeWidth">
+              <path d="M0,0 L7,3 L0,6 z" fill="#8c2f39" opacity=".85"/>
+            </marker>
+          </defs>
+
+          <!-- ====== 连线（先画，位于节点下方）====== -->
+
+          <!-- 老王 — 克劳狄斯：兄弟（横向） -->
+          <line class="edge e-sib" data-a="old" data-b="claudius"
+                x1="188" y1="150" x2="382" y2="150" marker-end=""/>
+          <text class="edgelabel el-sib" data-a="old" data-b="claudius"
+                x="285" y="140" text-anchor="middle">兄弟 brothers</text>
+
+          <!-- 老王 — 乔特鲁德：夫妻（斜下） -->
+          <line class="edge e-marry" data-a="old" data-b="gertrude"
+                x1="158" y1="196" x2="222" y2="300"/>
+          <text class="edgelabel el-marry" data-a="old" data-b="gertrude"
+                x="118" y="256" text-anchor="middle">夫妻 / 遗孀</text>
+
+          <!-- 克劳狄斯 — 乔特鲁德：夫妻（斜下） -->
+          <line class="edge e-marry" data-a="claudius" data-b="gertrude"
+                x1="412" y1="196" x2="348" y2="300"/>
+          <text class="edgelabel el-marry" data-a="claudius" data-b="gertrude"
+                x="452" y="256" text-anchor="middle">夫妻（再婚）</text>
+
+          <!-- 老王 — 哈姆雷特：父子（长斜线，绕左侧） -->
+          <path class="edge e-parent" data-a="old" data-b="hamlet"
+                d="M130,196 C96,300 118,430 236,478"/>
+          <text class="edgelabel el-parent" data-a="old" data-b="hamlet"
+                x="72" y="360" text-anchor="middle">父子</text>
+
+          <!-- 乔特鲁德 — 哈姆雷特：母子 -->
+          <path class="edge e-parent" data-a="gertrude" data-b="hamlet"
+                d="M300,352 C280,410 290,450 316,478"/>
+          <text class="edgelabel el-parent" data-a="gertrude" data-b="hamlet"
+                x="252" y="424" text-anchor="middle">母子</text>
+
+          <!-- 克劳狄斯 — 哈姆雷特：叔侄（兼继父） -->
+          <path class="edge e-confl" data-a="claudius" data-b="hamlet"
+                d="M392,196 C420,320 400,430 356,478" marker-end="url(#arrowDag)"/>
+          <text class="edgelabel el-confl" data-a="claudius" data-b="hamlet"
+                x="452" y="392" text-anchor="middle">毒杀其父 · 叔侄兼继父</text>
+
+          <!-- 波洛涅斯 — 奥菲莉亚：父女 -->
+          <path class="edge e-parent" data-a="polonius" data-b="ophelia"
+                d="M700,272 C664,336 636,392 622,466"/>
+          <text class="edgelabel el-parent" data-a="polonius" data-b="ophelia"
+                x="700" y="372" text-anchor="middle">父女</text>
+
+          <!-- 波洛涅斯 — 雷欧提斯：父子 -->
+          <path class="edge e-parent" data-a="polonius" data-b="laertes"
+                d="M816,272 C852,336 878,392 888,466"/>
+          <text class="edgelabel el-parent" data-a="polonius" data-b="laertes"
+                x="888" y="372" text-anchor="middle">父子</text>
+
+          <!-- 奥菲莉亚 — 雷欧提斯：兄妹 -->
+          <line class="edge e-sib" data-a="ophelia" data-b="laertes"
+                x1="656" y1="502" x2="854" y2="502"/>
+          <text class="edgelabel el-sib" data-a="ophelia" data-b="laertes"
+                x="755" y="492" text-anchor="middle">兄妹</text>
+
+          <!-- 哈姆雷特 — 奥菲莉亚：恋人（虚线） -->
+          <line class="edge e-love dashed-love" data-a="hamlet" data-b="ophelia"
+                x1="400" y1="502" x2="588" y2="502"/>
+          <text class="edgelabel el-love" data-a="hamlet" data-b="ophelia"
+                x="494" y="492" text-anchor="middle">相恋（后决裂）</text>
+
+          <!-- 哈姆雷特 — 雷欧提斯：决斗 / 复仇（虚线） -->
+          <path class="edge e-confl" data-a="hamlet" data-b="laertes"
+                d="M336,540 C500,600 780,596 886,540" marker-end="url(#arrowDag)"/>
+          <text class="edgelabel el-confl" data-a="hamlet" data-b="laertes"
+                x="612" y="588" text-anchor="middle">误杀其父 → 决斗复仇</text>
+
+          <!-- 哈姆雷特 — 波洛涅斯：误杀 -->
+          <path class="edge e-confl" data-a="hamlet" data-b="polonius"
+                d="M330,500 C420,420 560,340 690,290" marker-end="url(#arrowDag)"/>
+          <text class="edgelabel el-confl" data-a="hamlet" data-b="polonius"
+                x="540" y="404" text-anchor="middle">误杀（帘后）</text>
+
+          <!-- ====== 节点 ====== -->
+          <!-- 老王 -->
+          <g class="node n-crown" data-id="old" transform="translate(60,116)">
+            <rect x="0" y="0" width="140" height="80" rx="13"/>
+            <text class="nm" x="70" y="32" text-anchor="middle">老王哈姆雷特</text>
+            <text class="en" x="70" y="50" text-anchor="middle">Old King Hamlet</text>
+            <text class="role" x="70" y="67" text-anchor="middle">前国王 · 鬼魂</text>
+          </g>
+
+          <!-- 克劳狄斯 -->
+          <g class="node n-blood" data-id="claudius" transform="translate(382,116)">
+            <rect x="0" y="0" width="150" height="80" rx="13"/>
+            <text class="nm" x="75" y="32" text-anchor="middle">克劳狄斯</text>
+            <text class="en" x="75" y="50" text-anchor="middle">King Claudius</text>
+            <text class="role" x="75" y="67" text-anchor="middle">现任国王 · 弑兄者</text>
+          </g>
+
+          <!-- 乔特鲁德 -->
+          <g class="node n-blood" data-id="gertrude" transform="translate(238,300)">
+            <rect x="0" y="0" width="140" height="56" rx="13"/>
+            <text class="nm" x="70" y="25" text-anchor="middle">乔特鲁德</text>
+            <text class="en" x="70" y="43" text-anchor="middle">Queen Gertrude</text>
+          </g>
+
+          <!-- 哈姆雷特（中心） -->
+          <g class="node n-crown" data-id="hamlet" transform="translate(228,478)">
+            <rect x="0" y="0" width="180" height="62" rx="13"/>
+            <text class="nm" x="90" y="27" text-anchor="middle">哈姆雷特</text>
+            <text class="en" x="90" y="47" text-anchor="middle">Prince Hamlet</text>
+          </g>
+
+          <!-- 波洛涅斯 -->
+          <g class="node n-gold" data-id="polonius" transform="translate(694,242)">
+            <rect x="0" y="0" width="160" height="58" rx="13"/>
+            <text class="nm" x="80" y="26" text-anchor="middle">波洛涅斯</text>
+            <text class="en" x="80" y="45" text-anchor="middle">Polonius</text>
+          </g>
+
+          <!-- 奥菲莉亚 -->
+          <g class="node n-green" data-id="ophelia" transform="translate(596,474)">
+            <rect x="0" y="0" width="120" height="56" rx="13"/>
+            <text class="nm" x="60" y="25" text-anchor="middle">奥菲莉亚</text>
+            <text class="en" x="60" y="43" text-anchor="middle">Ophelia</text>
+          </g>
+
+          <!-- 雷欧提斯 -->
+          <g class="node n-green" data-id="laertes" transform="translate(830,474)">
+            <rect x="0" y="0" width="120" height="56" rx="13"/>
+            <text class="nm" x="60" y="25" text-anchor="middle">雷欧提斯</text>
+            <text class="en" x="60" y="43" text-anchor="middle">Laertes</text>
+          </g>
+        </svg>
+      </div>
+    </div>
+
+    <p style="font-size:14px;color:var(--muted);">
+      注：图中只呈现七位主要人物之间的直接关系；霍拉旭（Horatio）、罗森克兰兹与吉尔登斯吞等次要人物未列入，以免图面过密。
+    </p>
+  </div>
+</section>
+
+<!-- ========== 关系详解 ========== -->
+<section style="border-top:1px solid var(--line);">
+  <div class="wrap">
+    <h2 class="sec">Key Relationships</h2>
+    <h3 class="sec-title">六组关键关系逐条拆解</h3>
+
+    <details class="rel" open>
+      <summary><span class="tag t-marry">婚姻</span><span class="st">克劳狄斯 &amp; 乔特鲁德 <span class="en">/ Claudius &amp; Gertrude</span></span><span class="arw">›</span></summary>
+      <div class="rbody">
+        老国王死后，<b>乔特鲁德改嫁给小叔子克劳狄斯</b>——成了哈姆雷特的叔父兼继父。这场婚事仓促得可疑：父亲去世不到两个月，母亲就已经再婚。
+        <span class="quote">戏里哈姆雷特的痛处正在于此——在他看来，这桩婚事既是丧夫的"太快遗忘"，也是对亡父的背叛（按当时观念，娶兄嫂近乎乱伦）。</span>
+      </div>
+    </details>
+
+    <details class="rel">
+      <summary><span class="tag t-sib">兄弟</span><span class="st">老王 &amp; 克劳狄斯 <span class="en">/ Old King &amp; Claudius</span></span><span class="arw">›</span></summary>
+      <div class="rbody">
+        两人是亲兄弟。克劳狄斯趁老王在花园午睡时，<b>把毒药灌进他耳中</b>，对外宣称是毒蛇咬死，随后登上王位、娶了王嫂。
+        <span class="quote">"The serpent that did sting thy father's life / Now wears his crown."<br><span class="w">咬死你父亲的那条毒蛇，如今正戴着他的王冠。——鬼魂（第一幕第五场）</span></span>
+      </div>
+    </details>
+
+    <details class="rel">
+      <summary><span class="tag t-parent">亲子</span><span class="st">老王 &amp; 乔特鲁德 → 哈姆雷特 <span class="en">/ Parents of Hamlet</span></span><span class="arw">›</span></summary>
+      <div class="rbody">
+        老王与王后是哈姆雷特的<b>亲生父母</b>。父亲的猝死与母亲的速嫁，构成了全剧开篇的情感基调，也是他忧郁与迟疑的根源。
+        <span class="quote">"O God! a beast, that wants discourse of reason, / Would have mourn'd longer."<br><span class="w">天哪，一头没有理性的畜生也会哀悼得更久些。——哈姆雷特（第一幕第二场）</span></span>
+      </div>
+    </details>
+
+    <details class="rel">
+      <summary><span class="tag t-confl">敌对</span><span class="st">克劳狄斯 &amp; 哈姆雷特 <span class="en">/ Claudius &amp; Hamlet</span></span><span class="arw">›</span></summary>
+      <div class="rbody">
+        名义上是<b>叔侄兼继父与继子</b>，实为全剧最主要的对手。鬼魂揭露真相后，哈姆雷特以"戏中戏"试探其罪；克劳狄斯则接连派人窥探、流放，最后设下带毒的酒与剑。
+        <span class="quote">"O, my offence is rank, it smells to heaven."<br><span class="w">啊，我的罪孽深重，臭气冲上天堂。——克劳狄斯（第三幕第三场）</span></span>
+      </div>
+    </details>
+
+    <details class="rel">
+      <summary><span class="tag t-love">恋人</span><span class="st">哈姆雷特 &amp; 奥菲莉亚 <span class="en">/ Hamlet &amp; Ophelia</span></span><span class="arw">›</span></summary>
+      <div class="rbody">
+        两人原本<b>相恋</b>，但奥菲莉亚听从父亲波洛涅斯的劝告与他疏远；哈姆雷特陷入复仇后，对她屡出恶言，这段感情就此破裂。
+        <span class="quote">"Get thee to a nunnery: why wouldst thou be a breeder of sinners?"<br><span class="w">去做修女吧：何必还要生养一群罪人呢？——哈姆雷特（第三幕第一场）</span></span>
+      </div>
+    </details>
+
+    <details class="rel">
+      <summary><span class="tag t-parent">亲子 + 兄妹</span><span class="st">波洛涅斯 · 奥菲莉亚 · 雷欧提斯 <span class="en">/ Polonius &amp; His Children</span></span><span class="arw">›</span></summary>
+      <div class="rbody">
+        波洛涅斯是克劳狄斯的<b>御前大臣</b>，也是奥菲莉亚与雷欧提斯的父亲。哈姆雷特在帘后<b>误杀了偷听的波洛涅斯</b>，奥菲莉亚因此精神失常、溺水而亡，雷欧提斯则回国复仇，全剧的最终决斗由此而来。
+        <span class="quote">"I lov'd Ophelia: forty thousand brothers / Could not, with all their quantity of love, / Make up my sum."<br><span class="w">我爱奥菲莉亚：四万个兄弟的爱加起来也抵不过我的爱。——哈姆雷特（第五幕第一场）</span></span>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- ========== 速查表 ========== -->
+<section style="border-top:1px solid var(--line);">
+  <div class="wrap">
+    <h2 class="sec">Quick Reference</h2>
+    <h3 class="sec-title">人物身份速查表</h3>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>人物</th><th>身份</th><th>关键关系</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>哈姆雷特 <span class="en">Hamlet</span></td>
+            <td>丹麦王子</td>
+            <td>老王与乔特鲁德之子；克劳狄斯的侄子；与奥菲莉亚相恋</td>
+          </tr>
+          <tr>
+            <td>克劳狄斯 <span class="en">Claudius</span></td>
+            <td>现任国王</td>
+            <td>老王的弟弟、弑兄者；娶乔特鲁德；哈姆雷特的叔父兼继父</td>
+          </tr>
+          <tr>
+            <td>乔特鲁德 <span class="en">Gertrude</span></td>
+            <td>王后</td>
+            <td>老王的妻子；哈姆雷特的母亲；夫死后改嫁克劳狄斯</td>
+          </tr>
+          <tr>
+            <td>老王哈姆雷特 <span class="en">Old King Hamlet</span></td>
+            <td>前国王、鬼魂</td>
+            <td>克劳狄斯之兄；乔特鲁德的亡夫；哈姆雷特的父亲</td>
+          </tr>
+          <tr>
+            <td>波洛涅斯 <span class="en">Polonius</span></td>
+            <td>御前大臣</td>
+            <td>克劳狄斯的顾问；奥菲莉亚与雷欧提斯的父亲</td>
+          </tr>
+          <tr>
+            <td>奥菲莉亚 <span class="en">Ophelia</span></td>
+            <td>贵族小姐</td>
+            <td>波洛涅斯之女、雷欧提斯之妹；哈姆雷特的恋人</td>
+          </tr>
+          <tr>
+            <td>雷欧提斯 <span class="en">Laertes</span></td>
+            <td>贵族青年</td>
+            <td>波洛涅斯之子、奥菲莉亚之兄；为父报仇与哈姆雷特决斗</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 结局 ========== -->
+<section style="border-top:1px solid var(--line);">
+  <div class="wrap">
+    <h2 class="sec">How It Ends</h2>
+    <h3 class="sec-title">结局：几乎无人幸存</h3>
+    <p>最后一场戏中，克劳狄斯设下的毒剑与毒酒同时失控——七位主要人物中六人相继死去，只有霍拉旭活下来讲述这一切。</p>
+
+    <div class="deaths">
+      <div class="dcard">
+        <div class="nm">老国王</div><div class="en">Old King Hamlet</div>
+        <div class="de">剧中之前已被克劳狄斯毒杀于花园</div>
+      </div>
+      <div class="dcard">
+        <div class="nm">波洛涅斯</div><div class="en">Polonius</div>
+        <div class="de">第三幕被哈姆雷特误刺于帘后</div>
+      </div>
+      <div class="dcard">
+        <div class="nm">奥菲莉亚</div><div class="en">Ophelia</div>
+        <div class="de">第四幕精神失常后溺水而亡</div>
+      </div>
+      <div class="dcard">
+        <div class="nm">乔特鲁德</div><div class="en">Gertrude</div>
+        <div class="de">第五幕误饮克劳狄斯准备的毒酒</div>
+      </div>
+      <div class="dcard">
+        <div class="nm">克劳狄斯</div><div class="en">Claudius</div>
+        <div class="de">第五幕被哈姆雷特刺伤并强灌毒酒</div>
+      </div>
+      <div class="dcard">
+        <div class="nm">雷欧提斯</div><div class="en">Laertes</div>
+        <div class="de">决斗中被自己的毒剑所伤，临死与哈姆雷特和解</div>
+      </div>
+      <div class="dcard">
+        <div class="nm">哈姆雷特</div><div class="en">Hamlet</div>
+        <div class="de">中毒剑后刺死克劳狄斯，随后死去</div>
+      </div>
+      <div class="dcard survive">
+        <div class="nm">霍拉旭</div><div class="en">Horatio</div>
+        <div class="de">唯一幸存的主要人物，受托讲述全剧真相</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 经典台词 ========== -->
+<section style="border-top:1px solid var(--line);">
+  <div class="wrap">
+    <h2 class="sec">Famous Lines</h2>
+    <h3 class="sec-title">经典台词：原剧里的那些名句</h3>
+    <p>这些台词之所以流传四百年，是因为它们不只是"金句"，而是正好卡在人物的性格与命运上。读台词时，可以回头对照上面的人物关系——每一句背后都站着一段关系。</p>
+
+    <div class="qhint">
+      <strong>先纠正一个常见误记：</strong>很多人把"Frailty, thy name is woman"记成 <span style="text-decoration:line-through;">Fidelity</span> thy name is woman。原句是 <b>Frailty</b>（脆弱），不是 Fidelity（忠贞）——意思正好相反。这是哈姆雷特在痛斥母亲"太快改嫁"，不是夸她忠贞。
+    </div>
+
+    <div class="qfilter">
+      <button class="on" data-sp="all">全部</button>
+      <button data-sp="hamlet">哈姆雷特</button>
+      <button data-sp="claudius">克劳狄斯</button>
+      <button data-sp="gertrude">乔特鲁德</button>
+      <button data-sp="polonius">波洛涅斯</button>
+      <button data-sp="ophelia">奥菲莉亚</button>
+      <button data-sp="laertes">雷欧提斯</button>
+      <button data-sp="other">其他人物</button>
+    </div>
+
+    <!-- ===== 哈姆雷特 ===== -->
+    <div class="speaker" data-sp="hamlet">
+      <span class="sp-ic" style="background:var(--crown);">H</span>
+      <span class="sp-name">哈姆雷特<span class="en">Hamlet</span></span>
+      <span class="sp-line"></span>
+    </div>
+    <div style="margin-bottom:30px;" data-sp="hamlet">
+      <div class="qcard">
+        <div class="qen">Frailty, thy name is woman!</div>
+        <div class="qzh">脆弱啊，你的名字是女人！</div>
+        <div class="qmeta"><span class="chip">第一幕第二场</span><span class="chip blue">独白</span></div>
+        <div class="qnote">这是全剧最常被引用、也最常被记错的一句。哈姆雷特痛斥母亲乔特鲁德在父亲死后不到两个月就改嫁给叔父——<b>他骂的其实是母亲"经不住考验"，而不是全称判断地说女人都脆弱</b>。课堂上可以提醒：莎剧台词切不可脱离上下文当格言读。</div>
+      </div>
+      <div class="qcard">
+        <div class="qen">To be, or not to be: that is the question.</div>
+        <div class="qzh">生存还是毁灭，这是一个值得考虑的问题。</div>
+        <div class="qmeta"><span class="chip">第三幕第一场</span><span class="chip blue">著名独白</span></div>
+        <div class="qnote">英语文学中最著名的句子。表面在说"活下去还是不活"，实则纠结的是<b>究竟该忍受命运的折磨，还是反抗到底</b>——"死是与非死"之外，还有"忍还是斗"这一层。这与他的复仇困局直接呼应。</div>
+      </div>
+      <div class="qcard">
+        <div class="qen">Something is rotten in the state of Denmark.</div>
+        <div class="qzh">丹麦王国里有一桩腐败透顶的事。</div>
+        <div class="qmeta"><span class="chip">第一幕第四场</span><span class="chip blue">马西勒斯（Marcellus）所说</span></div>
+        <div class="qnote">严格说这句出自哨兵马西勒斯之口，不是哈姆雷特。它一语双关：既指"腐烂的政权"，也指即将揭晓的谋杀。<b>用一句话把个人悲剧放大成国家危机</b>，是理解全剧政治隐喻的钥匙。</div>
+      </div>
+      <div class="qcard">
+        <div class="qen">There are more things in heaven and earth, Horatio,<br>Than are dreamt of in your philosophy.</div>
+        <div class="qzh">霍拉旭，天地之间有许多事情，是你们的哲学里所没有梦想到的呢。</div>
+        <div class="qmeta"><span class="chip">第一幕第五场</span><span class="chip blue">对霍拉旭说</span></div>
+        <div class="qnote">见过鬼魂之后，哈姆雷特对好友霍拉旭说的第一句感想。它点出全剧的一个主题：<b>理性与经验之外，还有不可解释的东西</b>。（"your philosophy"通常指当时大学里教的那种自然哲学。）</div>
+      </div>
+      <div class="qcard">
+        <div class="qen">The play's the thing<br>Wherein I'll catch the conscience of the king.</div>
+        <div class="qzh">演戏是唯一的手段，我要用它来发掘国王内心的隐秘。</div>
+        <div class="qmeta"><span class="chip">第二幕第二场</span><span class="chip blue">独白</span></div>
+        <div class="qnote">哈姆雷特决定让戏班演一出"杀兄篡位"的戏（即"戏中戏"《捕鼠机》），观察克劳狄斯的反应。<b>这句话是他从"犹豫"转向"行动"的关键一步</b>，也是"以戏证罪"这个著名情节的起点。</div>
+      </div>
+      <div class="qcard">
+        <div class="qen">Get thee to a nunnery: why wouldst thou be a breeder of sinners?</div>
+        <div class="qzh">去做修女吧！何必还要生养一群罪人呢？</div>
+        <div class="qmeta"><span class="chip">第三幕第一场</span><span class="chip blue">对奥菲莉亚说</span></div>
+        <div class="qnote">这是哈姆雷特对奥菲莉亚最伤人的一句话。表面是对她绝情，实则混杂着<b>对母亲改嫁的愤怒、对女性的绝望，以及"装疯"的表演</b>。理解这句，就能理解他与奥菲莉亚那段感情为何崩塌（见上方"恋人"关系）。</div>
+      </div>
+      <div class="qcard">
+        <div class="qen">I must be cruel, only to be kind.</div>
+        <div class="qzh">我必须残忍，才能善良。</div>
+        <div class="qmeta"><span class="chip">第三幕第四场</span><span class="chip blue">对母亲说</span></div>
+        <div class="qnote">哈姆雷特进王后寝宫、痛责母亲之前说的。一句话道尽他"伤害所爱之人"的自我辩解：<b>为了让她看清真相，我不得不撕裂她的体面</b>。这句后来成为英语中极常用的表达。</div>
+      </div>
+      <div class="qcard">
+        <div class="qen">Alas, poor Yorick! I knew him, Horatio.</div>
+        <div class="qzh">唉，可怜的郁利克！霍拉旭，我认识他。</div>
+        <div class="qmeta"><span class="chip">第五幕第一场</span><span class="chip blue">墓地场景</span></div>
+        <div class="qnote">哈姆雷特捧着曾为他父亲耍弄的宫廷小丑的头骨说出的名句。他由此追问："你的玩笑、你的滑稽、你的歌声，如今都到哪里去了？"<b>这是全剧对"死亡面前人人平等"最直击人心的一段</b>。</div>
+      </div>
+      <div class="qcard">
+        <div class="qen">The rest is silence.</div>
+        <div class="qzh">其余的一切，都是沉默。</div>
+        <div class="qmeta"><span class="chip">第五幕第二场</span><span class="chip blue">临终遗言</span></div>
+        <div class="qnote">哈姆雷特的最后一句话，只有四个词。一切未竟的追问、未解的谜团，到此戛然而止。<b>以"沉默"收束全剧，是莎士比亚最克制也最震撼的一笔。</b></div>
+      </div>
+    </div>
+
+    <!-- ===== 克劳狄斯 ===== -->
+    <div class="speaker" data-sp="claudius">
+      <span class="sp-ic" style="background:var(--blood);">C</span>
+      <span class="sp-name">克劳狄斯<span class="en">Claudius</span></span>
+      <span class="sp-line"></span>
+    </div>
+    <div style="margin-bottom:30px;" data-sp="claudius">
+      <div class="qcard">
+        <div class="qen">O, my offence is rank, it smells to heaven.</div>
+        <div class="qzh">啊，我的罪孽深重，臭气已经冲上天堂。</div>
+        <div class="qmeta"><span class="chip">第三幕第三场</span><span class="chip blue">独白 · 祷告</span></div>
+        <div class="qnote">克劳狄斯独自祷告时承认杀兄之罪，却发现自己<b>无法真心悔改</b>——他舍不得王位和王后。这是全剧对他最深入的一次刻画：他不是脸谱化的恶人，而是明知有罪却不愿放手的人。</div>
+      </div>
+      <div class="qcard">
+        <div class="qen">My words fly up, my thoughts remain below;<br>Words without thoughts never to heaven go.</div>
+        <div class="qzh">我的话飞上去了，我的思想却还留在下面；没有思想的言语，永远上不了天。</div>
+        <div class="qmeta"><span class="chip">第三幕第三场</span><span class="chip blue">祷告后自语</span></div>
+        <div class="qnote">紧接着上一句。他意识到自己的祷告是假的，于是放弃祷告。<b>这几句直接导致了下一场的"误杀波洛涅斯"</b>——哈姆雷特正是因为他还在祷告，才没有当场动手。</div>
+      </div>
+    </div>
+
+    <!-- ===== 波洛涅斯 ===== -->
+    <div class="speaker" data-sp="polonius">
+      <span class="sp-ic" style="background:var(--gold);">P</span>
+      <span class="sp-name">波洛涅斯<span class="en">Polonius</span></span>
+      <span class="sp-line"></span>
+    </div>
+    <div style="margin-bottom:30px;" data-sp="polonius">
+      <div class="qcard">
+        <div class="qen">This above all: to thine own self be true,<br>And it must follow, as the night the day,<br>Thou canst not then be false to any man.</div>
+        <div class="qzh">尤其要紧的，你必须对你自己忠实；正像有了白昼才有黑夜，对自己忠实，才不会对别人欺诈。</div>
+        <div class="qmeta"><span class="chip">第一幕第三场</span><span class="chip blue">送子远行时的教诲</span></div>
+        <div class="qnote">波洛涅斯送儿子雷欧提斯去巴黎前的临别赠言。这句"<b>忠实于自己</b>"被引用了四百年，成了英语世界的道德箴言；但放在剧里颇有点讽刺意味——说这话的波洛涅斯本人，恰恰是个爱打探、爱算计的人。</div>
+      </div>
+      <div class="qcard">
+        <div class="qen">Neither a borrower nor a lender be:<br>For loan oft loses both itself and friend.</div>
+        <div class="qzh">不要向人告贷，也不要借钱给人；因为债款放了出去，往往连本带利都丢掉，朋友也随之而去。</div>
+        <div class="qmeta"><span class="chip">第一幕第三场</span><span class="chip blue">处世格言</span></div>
+        <div class="qnote">同属那段临别教诲，是波洛涅斯式"世故智慧"的代表。<b>这些话本身没有错，却暴露了他只重实用的性格</b>——与哈姆雷特的形而上追问形成鲜明对照。</div>
+      </div>
+      <div class="qcard">
+        <div class="qen">Though this be madness, yet there is method in 't.</div>
+        <div class="qzh">虽然这是疯话，可是其中却有条理。</div>
+        <div class="qmeta"><span class="chip">第二幕第二场</span><span class="chip blue">旁白</span></div>
+        <div class="qnote">波洛涅斯察觉哈姆雷特的"疯"里有章法。这句后来演变成常用语 <span class="serif">method in one's madness</span>（看似疯癫，实有道理）。<b>它提醒学生：哈姆雷特的疯是装出来的。</b></div>
+      </div>
+    </div>
+
+    <!-- ===== 奥菲莉亚 ===== -->
+    <div class="speaker" data-sp="ophelia">
+      <span class="sp-ic" style="background:var(--green);">O</span>
+      <span class="sp-name">奥菲莉亚<span class="en">Ophelia</span></span>
+      <span class="sp-line"></span>
+    </div>
+    <div style="margin-bottom:30px;" data-sp="ophelia">
+      <div class="qcard">
+        <div class="qen">O, woe is me,<br>To have seen what I have seen, see what I see!</div>
+        <div class="qzh">唉，我真伤心！我看见了曾经见过的，又看见了现在所看见的！</div>
+        <div class="qmeta"><span class="chip">第三幕第一场</span><span class="chip blue">目睹哈姆雷特"疯态"后</span></div>
+        <div class="qnote">奥菲莉亚眼看着昔日聪慧的哈姆雷特变成眼前的模样，悲痛难言。这句是理解她的关键——<b>她不是被动的花瓶，而是真正的受害者</b>：爱人的背叛与父亲的死亡先后压垮了她。</div>
+      </div>
+      <div class="qcard">
+        <div class="qen">He is dead and gone, lady,<br>He is dead and gone;<br>At his head a grass-green turf,<br>At his heels a stone.</div>
+        <div class="qzh">他死了，姑娘，他已经去了；头上盖着一块青草，脚边放着一块石碑。</div>
+        <div class="qmeta"><span class="chip">第四幕第五场</span><span class="chip blue">发疯后唱的歌谣</span></div>
+        <div class="qnote">奥菲莉亚精神失常后所唱的歌谣之一（她在唱死去的父亲）。<b>由散文化的台词转为歌谣，本身就是她精神崩解的外在标志</b>；本剧散韵交替的写法也在此最见功力。</div>
+      </div>
+      <div class="qcard">
+        <div class="qen">There's rosemary, that's for remembrance;<br>pray you, love, remember.</div>
+        <div class="qzh">这是迷迭香，是表示记忆的；爱人，请你记着吧。</div>
+        <div class="qmeta"><span class="chip">第四幕第五场</span><span class="chip blue">分花时所说</span></div>
+        <div class="qnote">她一边唱歌一边给众人分花：迷迭香象征"记忆"，三色堇象征"思念"。<b>莎士比亚用花语让她把心里说不出口的话说了出来</b>——这一场是英语戏剧里描写精神失常最动人的段落之一。</div>
+      </div>
+    </div>
+
+    <!-- ===== 雷欧提斯 ===== -->
+    <div class="speaker" data-sp="laertes">
+      <span class="sp-ic" style="background:var(--green);">L</span>
+      <span class="sp-name">雷欧提斯<span class="en">Laertes</span></span>
+      <span class="sp-line"></span>
+    </div>
+    <div style="margin-bottom:30px;" data-sp="laertes">
+      <div class="qcard">
+        <div class="qen">I dare damnation: to this point I stand,<br>That both the worlds I give to negligence,<br>Let come what comes, only I'll be revenged<br>Most thoroughly for my father.</div>
+        <div class="qzh">我不怕下地狱；我站在这一立场上，把今生来世都置之度外；任凭什么都来吧，我只要为我的父亲彻底报仇。</div>
+        <div class="qmeta"><span class="chip">第四幕第五场</span><span class="chip blue">复仇宣言</span></div>
+        <div class="qnote">得知父亲被杀、妹妹发疯后，雷欧提斯的复仇宣言。<b>他与哈姆雷特构成一组绝妙的对照</b>：同样为父报仇，雷欧提斯毫不犹豫、立即行动，哈姆雷特却思虑重重、一再延宕——"行动的雷欧提斯"正是"思考的哈姆雷特"的一面镜子。</div>
+      </div>
+      <div class="qcard">
+        <div class="qen">Exchange forgiveness with me, noble Hamlet:<br>Mine and my father's death come not upon thee,<br>Nor thine on me.</div>
+        <div class="qzh">高贵的哈姆雷特，让我们互相宽恕；我不怪你杀死我和我的父亲，你也不必怪我害死你。</div>
+        <div class="qmeta"><span class="chip">第五幕第二场</span><span class="chip blue">临终和解</span></div>
+        <div class="qnote">决斗中双方中毒将死，雷欧提斯在最后一刻揭穿克劳狄斯的阴谋，并与哈姆雷特互相宽恕。<b>这场和解把两人从"仇人"变回"两个被命运裹挟的年轻人"</b>，也顺势把矛头指向真正的元凶克劳狄斯。</div>
+      </div>
+    </div>
+
+    <!-- ===== 其他人物 ===== -->
+    <div class="speaker" data-sp="other">
+      <span class="sp-ic" style="background:var(--blue);">✥</span>
+      <span class="sp-name">其他人物<span class="en">Others</span></span>
+      <span class="sp-line"></span>
+    </div>
+    <div data-sp="other">
+      <div class="qcard">
+        <div class="qen">Good night, sweet prince,<br>And flights of angels sing thee to thy rest.</div>
+        <div class="qzh">晚安，亲爱的王子，愿成群的天使为你歌唱，送你安息。</div>
+        <div class="qmeta"><span class="chip">第五幕第二场</span><span class="chip blue">霍拉旭（Horatio）所说</span></div>
+        <div class="qnote">哈姆雷特死后，唯一幸存的好友霍拉旭的告别辞。<b>霍拉旭是全剧的"信义坐标"</b>——所有人都在算计、背叛、复仇，只有他始终忠诚。这句话也是英语中最著名的悼词之一。</div>
+      </div>
+      <div class="qcard">
+        <div class="qen">Brevity is the soul of wit.</div>
+        <div class="qzh">简洁是智慧的灵魂。</div>
+        <div class="qmeta"><span class="chip">第二幕第二场</span><span class="chip blue">波洛涅斯所说（反讽）</span></div>
+        <div class="qnote">这句话本身是名句，好笑的是——<b>说这话的波洛涅斯恰恰啰嗦至极</b>。莎士比亚借他之口自嘲，全场效果是反讽。可作为"台词与人物性格相反"的经典教案。</div>
+      </div>
+      <div class="qcard">
+        <div class="qen">The lady doth protest too much, methinks.</div>
+        <div class="qzh">我想，这位女士的表白太过分了。</div>
+        <div class="qmeta"><span class="chip">第三幕第二场</span><span class="chip blue">乔特鲁德（Gertrude）所说</span></div>
+        <div class="qnote">"戏中戏"上演时，王后对戏台上的"王后"做出的评价——而戏里那位誓言永不改嫁的王后，正是她自己的写照。<b>这一句不动声色的自我暴露，是全剧最精妙的反讽时刻之一</b>。</div>
+      </div>
+    </div>
+
+    <p style="font-size:14px;color:var(--muted);margin-top:8px;">
+      注：以上引文均核对第二四开本（Q2）等通行文本；中译为便于课堂讲解的通行译法，非逐字直译。
+    </p>
+  </div>
+</section>
+
+<footer>
+  《哈姆雷特》主要人物关系图 · Hamlet Character Map<br>
+  内容涵盖 Claudius、Gertrude、Old King Hamlet、Hamlet、Polonius、Ophelia、Laertes 七人
+</footer>
+
+<script>
+(function(){
+  const nodes = [...document.querySelectorAll('.node')];
+  const edges = [...document.querySelectorAll('.edge')];
+  const labels = [...document.querySelectorAll('.edgelabel')];
+  const resetBtn = document.getElementById('resetBtn');
+
+  function clear(){
+    nodes.forEach(n=>n.classList.remove('dim','active'));
+    edges.forEach(e=>e.classList.remove('dim','hi'));
+    labels.forEach(l=>l.classList.remove('dim'));
+  }
+
+  function focus(id){
+    clear();
+    const hitEdges = [], hitLabels = [], hitNodes = new Set([id]);
+    edges.forEach(e=>{
+      if(e.dataset.a===id || e.dataset.b===id){
+        hitEdges.push(e);
+        hitNodes.add(e.dataset.a); hitNodes.add(e.dataset.b);
+      }
+    });
+    labels.forEach(l=>{
+      if(l.dataset.a===id || l.dataset.b===id) hitLabels.push(l);
+    });
+
+    edges.forEach(e=>{ if(!hitEdges.includes(e)) e.classList.add('dim'); });
+    labels.forEach(l=>{ if(!hitLabels.includes(l)) l.classList.add('dim'); });
+    nodes.forEach(n=>{
+      if(n.dataset.id===id){ n.classList.add('active'); }
+      else if(hitNodes.has(n.dataset.id)){ /* 保持高亮 */ }
+      else { n.classList.add('dim'); }
+    });
+    hitEdges.forEach(e=>e.classList.add('hi'));
+  }
+
+  nodes.forEach(n=>{
+    n.addEventListener('click', ()=>{
+      if(n.classList.contains('active')) clear();
+      else focus(n.dataset.id);
+    });
+  });
+
+  resetBtn.addEventListener('click', clear);
+})();
+
+/* ========== 经典台词：按人物筛选 ========== */
+(function(){
+  const btns = [...document.querySelectorAll('.qfilter button')];
+  const speakers = [...document.querySelectorAll('div.speaker[data-sp]')];
+  // 台词卡所在的包裹层（带 data-sp，且不是筛选栏、不是说话人标题）
+  const blocks = [...document.querySelectorAll('div[data-sp]')].filter(
+    el => !el.classList.contains('qfilter') && !el.classList.contains('speaker')
+  );
+  // 一次点击要动的全部元素：标题 + 内容块
+  const toggleAll = [...speakers, ...blocks];
+
+  btns.forEach(b=>{
+    b.addEventListener('click', ()=>{
+      const sp = b.dataset.sp;
+      btns.forEach(x=>x.classList.toggle('on', x===b));
+      toggleAll.forEach(el=>{
+        el.style.display = (sp==='all' || el.dataset.sp===sp) ? '' : 'none';
+      });
+      if(sp!=='all'){
+        const top = document.querySelector('.qfilter');
+        window.scrollTo({top: top.getBoundingClientRect().top+window.scrollY-90, behavior:'smooth'});
+      }
+    });
+  });
+})();
+</script>
+</body>
+</html>
